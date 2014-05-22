@@ -1,0 +1,42 @@
+doctype html
+html
+	head
+		title= title
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		script(type="text/javascript").
+			// Runs onload
+			var xmlHttp = new XMLHttpRequest();
+
+			xmlHttp.onreadystatechange = function(){
+				if(xmlHttp.readyState==4 && xmlHttp.status == 200){
+					data = JSON.parse(xmlHttp.response);
+					console.log(data[0]);
+					data.forEach(function(entry){
+							var ul = document.getElementById("liste");
+							var li = document.createElement("li");
+							li.innerHTML = entry;
+							ul.appendChild(li);
+						});
+				}
+			}
+
+			xmlHttp.open("GET", "/todos", true);
+			xmlHttp.send();
+
+			// Send post variable
+			function saveValue(){
+				// Send POST request
+				var xmlHttp = new XMLHttpRequest();
+				xmlHttp.open("POST", "/todos", true);
+				var formData = new FormData();
+				formData.append("saveValue", document.getElementById("add").value);
+				xmlHttp.send(formData);
+
+				// Create HTML element
+				var ul = document.getElementById("liste");
+				var li = document.createElement("li");
+				li.innerHTML = document.getElementById("add").value;
+				ul.appendChild(li);
+			}
+	body
+		block content
